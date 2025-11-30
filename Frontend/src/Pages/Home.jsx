@@ -1,7 +1,19 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
+import Card from '../Components/Card'
 
 const Home = () => {
-  return (
+    const [plants, setPlants] = useState([]);
+
+    useEffect(() =>{
+        async function fetchPlants(){
+            const res = await fetch("http://localhost:3000/api/plant/home");
+            const data = await res.json();
+            setPlants(data);
+        }
+        fetchPlants();
+    },[]);
+
+    return (
     <>
     <div className='relative w-full h-[500px] flex flex-col items-center justify-center bg-cover bg-center'
      style={{
@@ -15,8 +27,11 @@ const Home = () => {
         </div>
         
     </div>
-    <div className=''>Card 1</div>
-    <div className=''>Card 2</div>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6'>
+        {plants.map(Plant =>(
+            <Card key={Plant._id} Plant={Plant}/>
+        ))}
+    </div>
     </>
   )
 }

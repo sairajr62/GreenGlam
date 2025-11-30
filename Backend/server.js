@@ -1,28 +1,44 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import routes from "./index.js";
-import Plant from './models/Plant.js';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import Plant from "./models/Plant.js";
 
-// Load variables from .env file
 dotenv.config();
 
-// 1. Initialize the App
 const app = express();
 
-// 2. Middleware (The Gatekeepers)
-app.use(express.json()); // Allows server to accept JSON data (req.body)
-app.use(cors()); // Allows your React frontend to talk to this backend
+app.use(express.json());
+app.use(cors());
 
 await mongoose.connect("mongodb://localhost:27017/plants-db");
 
-app.get("/api/plant", async (req,res)=>{
-    const plants=await Plant.find({});
-    res.json(plants);
+// ==============================
+// HOME PAGE — returns ONLY 6 plants
+// ==============================
+app.get("/api/plant/home", async (req, res) => {
+  const plants = await Plant.find().limit(6);
+  res.json(plants);
 });
 
-app.listen(3000, ()=>{
-    console.log("Server running on port 3000")
+// ==============================
+// SHOP PAGE — PAGINATION
+// ==============================
+app.get("/api/plant/shop", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 20; // number of cards per page
+  const skip = (page - 1) * limit;
+
+  const plants = await Plant.find().skip(skip).limit(limit);
+
+  res.json({
+    page,
+    limit,
+    data: plants,
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
 
