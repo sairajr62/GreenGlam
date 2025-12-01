@@ -13,20 +13,17 @@ app.use(cors());
 
 await mongoose.connect("mongodb://localhost:27017/plants-db");
 
-// ==============================
 // HOME PAGE — returns ONLY 6 plants
-// ==============================
 app.get("/api/plant/home", async (req, res) => {
   const plants = await Plant.find().limit(6);
   res.json(plants);
 });
 
-// ==============================
 // SHOP PAGE — PAGINATION
-// ==============================
+
 app.get("/api/plant/shop", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 20; // number of cards per page
+  const limit = 20; 
   const skip = (page - 1) * limit;
 
   const plants = await Plant.find().skip(skip).limit(limit);

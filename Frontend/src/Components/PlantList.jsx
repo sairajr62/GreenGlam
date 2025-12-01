@@ -1,23 +1,25 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import Card from './Card';
+import axios from 'axios';
 
-
-function PlantList (){
+const PlantList = () => {
     const [plants, setPlants] = useState([]);
 
     useEffect(() =>{
-        async function fetchPlants(){
-            const res = await fetch("http://localhost:3000/api/plant/home");
-            const data = await res.json();
-            setPlants(data);
+        const  fetchPlants = async () => {
+            const res = await axios.get("http://localhost:3000/api/plant/home");
+            // const data = await res.data.json();
+            console.log(res);
+            
+            setPlants(res.data);
         }
         fetchPlants();
     },[]);
 
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>{plants.map(Plant =>(
-        <Card key={Plant._id} Plant={Plant}/>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>{plants.map(p =>(
+        <Card plants={p} />
     ))}   
         </div>
   );

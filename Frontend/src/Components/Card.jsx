@@ -1,23 +1,21 @@
 import React from "react";
 
-function Card({ plant }) {
+const Card = ({ plants }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4 border">
       <h2 className="text-lg font-semibold mb-1 text-red-400">
-        {plant?.common_name || "Unknown Plant"}
+        {plants.common_name || "Unknown Plant"}
       </h2>
 
       <p className="text-gray-500 text-sm">
-        {plant?.scientific_name?.[0] || "No Scientific Name"}
+        {plants?.scientific_name?.[0] || "No Scientific Name"}
       </p>
-
-      {plant?.default_image?.thumbnail && (
+       
         <img
-          src={plant.default_image.thumbnail}
-          alt={plant.common_name}
+          src={plants.default_image?.original_url || "https://perenual.com/storage/species_image/1_abies_alba/og/1536px-Abies_alba_SkalitC3A9.jpg"}
+          alt={plants?.common_name}
           className="w-full h-40 object-cover rounded-md"
         />
-      )}
     </div>
   );
 }
